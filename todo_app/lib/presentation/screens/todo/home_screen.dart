@@ -27,7 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // Load todos when the HomeScreen is initialized
-    BlocProvider.of<TodoBloc>(context).add(LoadTodos());
+    BlocProvider.of<TodoBloc>(context).add(LoadTodos(selectedFilter.name));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    BlocProvider.of<TodoBloc>(context).add(LoadTodos(selectedFilter.name));
   }
 
   @override
@@ -105,15 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      // IconButton(
-                      //   icon:
-                      //       Image.asset('lib/assets/filter.png'), // Filter icon
-                      //   onPressed: () {
-                      //     // Handle filter button press
-                      //     _showFilterOptions();
-                      //   },
-                      // ),
-                      // Filter button with PopupMenuButton
                       PopupMenuButton<TodoFilter>(
                         icon:
                             Image.asset('lib/assets/filter.png'), // Filter icon
@@ -124,9 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Optionally, you can trigger a filter action here
                           BlocProvider.of<TodoBloc>(context)
                               .add(LoadTodos(selectedFilter.name));
-                          // context.read<TodoBloc>().add(LoadTodos());
-                          print(selectedFilter.name);
                         },
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(10), // Rounded corners
+                        ),
+                        color: Colors.white,
                         itemBuilder: (BuildContext context) =>
                             <PopupMenuEntry<TodoFilter>>[
                           PopupMenuItem<TodoFilter>(
@@ -134,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               'All',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: selectedFilter == TodoFilter.all
                                     ? Colors.orange
                                     : null,
@@ -145,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               'By Time',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: selectedFilter == TodoFilter.time
                                     ? Colors.orange
                                     : null,
@@ -156,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               'By Deadline',
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: selectedFilter == TodoFilter.deadline
                                     ? Colors.orange
                                     : null,
@@ -194,7 +197,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               final todo =
                                   todos[index]; // Get todo at current index
                               return TodoCard(
-                                  todo: todo); // Display each todo item
+                                todo: todo,
+                                filterOption: selectedFilter.name,
+                                todoBloc: BlocProvider.of<TodoBloc>(context),
+                              ); // Display each todo item
                             },
                           );
                         } else if (state is TodoError) {
@@ -237,59 +243,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  // Method to show the filter options
-  void _showFilterOptions() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          height: 200, // Height of the modal
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Select a filter',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                title: const Text('All'),
-                onTap: () {
-                  setState(() {
-                    selectedFilter =
-                        TodoFilter.all; // Update the selected filter
-                  });
-                  Navigator.pop(context); // Close the modal
-                },
-              ),
-              ListTile(
-                title: const Text('By Time'),
-                onTap: () {
-                  setState(() {
-                    selectedFilter =
-                        TodoFilter.time; // Update the selected filter
-                  });
-                  Navigator.pop(context); // Close the modal
-                },
-              ),
-              ListTile(
-                title: const Text('By Deadline'),
-                onTap: () {
-                  setState(() {
-                    selectedFilter =
-                        TodoFilter.deadline; // Update the selected filter
-                  });
-                  Navigator.pop(context); // Close the modal
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/blocs/todo/todo_bloc.dart';
+import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/presentation/screens/todo/details_todo_screen.dart';
 import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/models/todo.dart';
 
 class TodoCard extends StatelessWidget {
   final Todo todo;
-
-  const TodoCard({Key? key, required this.todo}) : super(key: key);
+  final String filterOption;
+  final TodoBloc todoBloc;
+  const TodoCard(
+      {Key? key,
+      required this.todo,
+      required this.filterOption,
+      required this.todoBloc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +30,9 @@ class TodoCard extends StatelessWidget {
               todoId: todo.id,
             ),
           ),
-        );
+        ).then((_) {
+          todoBloc.add(LoadTodos(filterOption));
+        });
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

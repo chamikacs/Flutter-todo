@@ -12,8 +12,8 @@ class LoadTodos extends TodoEvent {
 
   LoadTodos([this.filter = 'all']);
 
-  @override
-  List<Object?> get props => [filter];
+  // @override
+  // List<Object?> get props => [filter];
 }
 
 class ClearTodosEvent extends TodoEvent {}
