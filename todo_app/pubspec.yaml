@@ -1,0 +1,50 @@
+name: todo_app
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+    
+  flutter_bloc: ^8.0.0
+  bloc: ^8.0.0
+  dio: ^4.0.0
+  shared_preferences: ^2.0.0
+  json_serializable: ^6.0.0
+  equatable: ^2.0.0
+  cupertino_icons: ^1.0.8
+  http: ^1.2.2
+  mockito: ^5.0.17
+  bloc_test: ^9.1.0
+  build_runner: ^2.3.3
+  intl: ^0.17.0
+  image_picker: ^0.8.7+4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+        - lib/assets/plus-circle.png
+        - lib/assets/filter.png
+        - lib/assets/settings.png
+        - lib/assets/clock.png
+        - lib/assets/Union.png
+        - lib/assets/edit-2.png
+        - lib/assets/trash-2.png
+        - lib/assets/clock-d.png
+        - lib/assets/union-sign.png
+        - lib/assets/calendar.png
+        - lib/assets/pic.png
+        - lib/assets/rafiki.png
