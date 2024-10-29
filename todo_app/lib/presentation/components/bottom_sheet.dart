@@ -41,7 +41,8 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
     );
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
-        selectedDate = pickedDate;
+        selectedDate =
+            DateTime.utc(pickedDate.year, pickedDate.month, pickedDate.day);
       });
     }
   }
