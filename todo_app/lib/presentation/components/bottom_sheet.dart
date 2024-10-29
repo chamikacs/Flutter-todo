@@ -25,14 +25,10 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   @override
   void initState() {
     super.initState();
-    print("sate in bottom sheet");
     if (widget.todo != null) {
       titleController.text = widget.todo!.title;
       descriptionController.text = widget.todo!.description;
       selectedDate = widget.todo!.deadline;
-      if (widget.todo!.image != null) {
-        _selectedImage = File(widget.todo!.image!);
-      }
     }
   }
 
@@ -130,19 +126,25 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
             const SizedBox(height: 16),
             GestureDetector(
               onTap: _pickImageFromGallery,
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Add Image (Optional)',
-                    labelStyle: TextStyle(color: Colors.white),
-                    filled: true,
-                    fillColor: Color(0xFFEAB6A2),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFEAB6A2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.image, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _selectedImage == null
+                            ? 'Add Image (Optional)'
+                            : 'Image Selected: ${_selectedImage!.path.split('/').last}',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    suffixIcon: Icon(Icons.image, color: Colors.white),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -160,13 +162,16 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                   title: titleController.text,
                   description: descriptionController.text,
                   deadline: selectedDate,
-                  image: _selectedImage?.path,
                 );
+
+                // Dispatch the add or edit event with the selected image file
                 if (widget.todo == null) {
-                  context.read<TodoBloc>().add(AddTodo(newTodo));
+                  context
+                      .read<TodoBloc>()
+                      .add(AddTodo(newTodo, imageFile: _selectedImage));
                 } else {
-                  context.read<TodoBloc>().add(EditTodoRequested(newTodo));
-                  // context.read<TodoBloc>().add(LoadTodos());
+                  context.read<TodoBloc>().add(
+                      EditTodoRequested(newTodo, imageFile: _selectedImage));
                 }
                 Navigator.pop(context);
               },

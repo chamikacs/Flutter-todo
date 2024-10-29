@@ -6,7 +6,9 @@ import {
   GetUserProfile,
 } from "../controllers/authController.js";
 
+
 const authRouter = express.Router();
+
 
 authRouter.post("/signup", async (req, res) => {
   await SignupUser(req, res);

@@ -39,8 +39,6 @@ class Todo {
       'description': description,
       'deadline': deadline
           ?.toIso8601String(), // Use null-aware operator for optional field
-      'image': image,
-      // Do not include createdAt here since it's not created on user sign up
     };
   }
 

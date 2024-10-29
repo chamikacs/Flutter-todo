@@ -1,4 +1,6 @@
 // blocs/todo/todo_event.dart
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:todo_app/models/todo.dart';
 
@@ -12,15 +14,17 @@ class LoadTodos extends TodoEvent {
 
   LoadTodos([this.filter = 'all']);
 
-  // @override
-  // List<Object?> get props => [filter];
+  @override
+  List<Object?> get props => [filter];
 }
 
 class ClearTodosEvent extends TodoEvent {}
 
 class AddTodo extends TodoEvent {
   final Todo todo;
-  AddTodo(this.todo);
+  final File? imageFile;
+
+  AddTodo(this.todo, {this.imageFile});
 }
 
 class DeleteTodo extends TodoEvent {
@@ -30,8 +34,9 @@ class DeleteTodo extends TodoEvent {
 
 class EditTodoRequested extends TodoEvent {
   final Todo updatedTodo;
+  final File? imageFile;
 
-  EditTodoRequested(this.updatedTodo);
+  EditTodoRequested(this.updatedTodo, {this.imageFile});
 
   @override
   List<Object> get props => [updatedTodo];

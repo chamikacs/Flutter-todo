@@ -32,7 +32,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
     on<AddTodo>((event, emit) async {
       try {
-        await todoRepository.addTodo(event.todo);
+        await todoRepository.addTodo(event.todo, imageFile: event.imageFile);
         add(LoadTodos()); // Reload todos after adding one
       } catch (e) {
         emit(TodoError('Failed to load todos: $e'));

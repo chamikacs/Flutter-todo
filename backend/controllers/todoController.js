@@ -1,8 +1,23 @@
 import { Todo } from "../models/Todo.js";
+import multer from "multer"
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
+  },
+});
+
+const upload = multer({ storage });
+
 
 export const CreateTodo = async (req, res) => {
   try {
-    const { title, description, deadline, image } = req.body;
+    const { title, description, deadline } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
     const todo = new Todo({
       userId: req.user.id,
       title,

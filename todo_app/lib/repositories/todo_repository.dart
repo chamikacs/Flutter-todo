@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/services/api_service.dart';
 
@@ -16,9 +18,9 @@ class TodoRepository {
   // }
 
   // Add a new todo
-  Future<void> addTodo(Todo todo) async {
+  Future<void> addTodo(Todo todo, {File? imageFile}) async {
     try {
-      await _apiService.addTodo(todo);
+      await _apiService.addTodo(todo, imageFile: imageFile);
     } catch (e) {
       throw Exception('Error adding todo: $e');
     }

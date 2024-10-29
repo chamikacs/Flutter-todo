@@ -1,5 +1,6 @@
 // services/api_service.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/models/todo.dart';
@@ -109,20 +110,37 @@ class ApiService {
   // }
 
   // Add a new todo
-  Future<void> addTodo(Todo todo) async {
+  Future<void> addTodo(Todo todo, {File? imageFile}) async {
     final headers = await _getHeaders();
-    final response = await http.post(
-      Uri.parse('$baseUrl/todos'),
-      headers: headers,
-      body: jsonEncode({
-        'title': todo.title,
-        'description': todo.description,
-        'deadline': todo.deadline?.toIso8601String(),
-        'image': todo.image
-      }),
-    );
+    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/todos'));
+    request.headers.addAll(headers);
 
+    request.fields['title'] = todo.title;
+    request.fields['description'] = todo.description;
+    if (todo.deadline != null) {
+      request.fields['deadline'] = todo.deadline!.toIso8601String();
+    }
+
+    // Add image file if it exists
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
+    }
+
+    // Send the request
+    final response = await request.send();
     if (response.statusCode != 201) {
+      final responseBody = await response.stream.bytesToString();
+      print('Body: $responseBody');
+
+      // Optionally, decode JSON if the response is in JSON format
+      try {
+        final decodedBody = jsonDecode(responseBody);
+        print('Decoded Body: $decodedBody');
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
       throw Exception('Failed to add todo');
     }
   }
