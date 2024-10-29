@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,11 @@ class DetailTodoScreen extends StatelessWidget {
             return const Center(child: Text("Todo not found."));
           }
 
+          Uint8List? imageBytes;
+          if (todo.image != null && todo.image!.isNotEmpty) {
+            imageBytes = base64Decode(todo.image!);
+          }
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: AppColors.white,
@@ -54,64 +61,72 @@ class DetailTodoScreen extends StatelessWidget {
                 ),
               ],
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Display image if available, otherwise show placeholder
-                  if (todo.image != null && todo.image!.isNotEmpty)
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: FileImage(File(todo.image!)), // Use FileImage
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize
+                      .min, // Allows the column to take up only needed space
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      todo.title,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      todo.description,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.black.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Display image if available, otherwise show placeholder
+                    if (todo.image != null && todo.image!.isNotEmpty)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16.0),
+                        child: Image.memory(
+                          imageBytes!,
                           fit: BoxFit.cover,
                         ),
+                      )
+                    else
+                      Container(
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.grey[500],
+                          size: 50,
+                        ),
                       ),
-                    )
-                  else
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.image,
-                        color: Colors.grey[500],
-                        size: 50,
+
+                    const SizedBox(height: 30),
+
+                    Center(
+                      child: Text(
+                        'Created at ${_formatDate(todo.createdAt)}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.black.withOpacity(0.6),
+                        ),
                       ),
                     ),
-                  const SizedBox(height: 16),
-                  Text(
-                    todo.title,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    todo.description,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.black.withOpacity(0.7),
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    'Created at: ${_formatDate(todo.createdAt)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.black.withOpacity(0.6),
-                    ),
-                  ),
-                ],
+
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           );

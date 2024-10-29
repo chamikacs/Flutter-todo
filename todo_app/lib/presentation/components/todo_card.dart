@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/todo/todo_bloc.dart';
 import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/presentation/screens/todo/details_todo_screen.dart';
@@ -19,6 +18,22 @@ class TodoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color backgroundColor() {
+      if (todo.deadline == null) {
+        return AppColors.peach;
+      }
+      return AppColors.coral;
+    }
+
+    Image? deadlineIcon() {
+      if (todo.deadline == null) {
+        return Image.asset(
+          'lib/assets/clock.png', // Placeholder for the clock icon
+        );
+      }
+      return null;
+    }
+
     return GestureDetector(
       // Make the card clickable
       onTap: () {
@@ -38,7 +53,7 @@ class TodoCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.coral,
+          color: backgroundColor(),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -55,14 +70,15 @@ class TodoCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                IconButton(
-                  icon: Image.asset(
-                    'lib/assets/clock.png', // Placeholder for the clock icon
+                if (todo.deadline != null)
+                  IconButton(
+                    icon: Image.asset(
+                      'lib/assets/clock.png', // Placeholder for the clock icon
+                    ),
+                    onPressed: () {
+                      // Handle timer/clock action
+                    },
                   ),
-                  onPressed: () {
-                    // Handle timer/clock action
-                  },
-                ),
               ],
             ),
             const SizedBox(height: 8),

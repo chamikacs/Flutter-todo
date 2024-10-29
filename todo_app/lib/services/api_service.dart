@@ -31,9 +31,6 @@ class ApiService {
       body: jsonEncode({'email': email, 'password': password}),
     );
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       // Successfully logged in, parse the token and return
       final data = jsonDecode(response.body);
@@ -110,37 +107,62 @@ class ApiService {
   // }
 
   // Add a new todo
+  // Future<void> addTodo(Todo todo, {File? imageFile}) async {
+  //   final headers = await _getHeaders();
+  //   final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/todos'));
+  //   request.headers.addAll(headers);
+
+  //   request.fields['title'] = todo.title;
+  //   request.fields['description'] = todo.description;
+  //   if (todo.deadline != null) {
+  //     request.fields['deadline'] = todo.deadline!.toIso8601String();
+  //   }
+
+  //   // Add image file if it exists
+  //   if (imageFile != null) {
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath('image', imageFile.path),
+  //     );
+  //   }
+
+  //   // Send the request
+  //   final response = await request.send();
+  //   if (response.statusCode != 201) {
+  //     final responseBody = await response.stream.bytesToString();
+  //     print('Body: $responseBody');
+
+  //     // Optionally, decode JSON if the response is in JSON format
+  //     try {
+  //       final decodedBody = jsonDecode(responseBody);
+  //       print('Decoded Body: $decodedBody');
+  //     } catch (e) {
+  //       print('Error decoding JSON: $e');
+  //     }
+  //     throw Exception('Failed to add todo');
+  //   }
+  // }
+
   Future<void> addTodo(Todo todo, {File? imageFile}) async {
     final headers = await _getHeaders();
-    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/todos'));
-    request.headers.addAll(headers);
+    final uri = Uri.parse('$baseUrl/todos');
+    final Map<String, dynamic> todoData = {
+      'title': todo.title,
+      'description': todo.description,
+      if (todo.deadline != null) 'deadline': todo.deadline!.toIso8601String(),
+    };
 
-    request.fields['title'] = todo.title;
-    request.fields['description'] = todo.description;
-    if (todo.deadline != null) {
-      request.fields['deadline'] = todo.deadline!.toIso8601String();
-    }
-
-    // Add image file if it exists
+    // If there's an image, encode it to base64 and add it to the request
     if (imageFile != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('image', imageFile.path),
-      );
+      final bytes = await imageFile.readAsBytes();
+      todoData['image'] = base64Encode(bytes); // Encode image to base64
     }
 
-    // Send the request
-    final response = await request.send();
-    if (response.statusCode != 201) {
-      final responseBody = await response.stream.bytesToString();
-      print('Body: $responseBody');
+    final response =
+        await http.post(uri, headers: headers, body: jsonEncode(todoData));
 
-      // Optionally, decode JSON if the response is in JSON format
-      try {
-        final decodedBody = jsonDecode(responseBody);
-        print('Decoded Body: $decodedBody');
-      } catch (e) {
-        print('Error decoding JSON: $e');
-      }
+    // print(response.body);
+
+    if (response.statusCode != 201) {
       throw Exception('Failed to add todo');
     }
   }

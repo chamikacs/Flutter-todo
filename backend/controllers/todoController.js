@@ -1,39 +1,35 @@
 import { Todo } from "../models/Todo.js";
-import multer from "multer"
+import fs from "fs";
 
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
-  },
-});
-
-const upload = multer({ storage });
 
 
 export const CreateTodo = async (req, res) => {
   try {
-    const { title, description, deadline } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const { title, description, deadline, image } = req.body;
+    
+    {/* Use this code only to save the image in the uploads folder */}
+    // let imagePath = null;
+    // if (image) {
+    //   // Decode the base64 string and save it as an image file
+    //   const buffer = Buffer.from(image, 'base64');
+    //   const fileName = `${Date.now()}.png`;
+    //   imagePath = `/uploads/${fileName}`;
+    //   fs.writeFileSync(`./uploads/${fileName}`, buffer);
+    // }
+
     const todo = new Todo({
       userId: req.user.id,
       title,
       description,
       deadline,
-      image,
+      image: image,
     });
-    const results = await todo.save();
-    if (!results) {
-      return res.status(404).send({ message: "Todo creation failed" });
-    }
-    return res.status(201).json(todo);
+
+    const result = await todo.save();
+    return res.status(201).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating todo", error: error.message });
+    res.status(500).json({ message: 'Error creating todo', error: error.message });
   }
 };
 
