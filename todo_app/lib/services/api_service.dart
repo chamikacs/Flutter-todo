@@ -88,25 +88,25 @@ class ApiService {
   }
 
   // Fetch todos
-  Future<List<Todo>> fetchTodos() async {
-    final headers = await _getHeaders();
-    final response = await http.get(
-      Uri.parse('$baseUrl/todos'),
-      headers: headers,
-    );
+  // Future<List<Todo>> fetchTodos() async {
+  //   final headers = await _getHeaders();
+  //   final response = await http.get(
+  //     Uri.parse('$baseUrl/todos'),
+  //     headers: headers,
+  //   );
 
-    if (response.statusCode == 200) {
-      // print("Todo response : ${response.body}");
-      // Decode the JSON response
-      List<dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse
-          .map((todo) => Todo.fromJson(todo))
-          .toList(); // Assuming Todo has a fromJson method
-    } else {
-      throw Exception(
-          'Failed to fetch todos with status: ${response.statusCode}');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     // print("Todo response : ${response.body}");
+  //     // Decode the JSON response
+  //     List<dynamic> jsonResponse = jsonDecode(response.body);
+  //     return jsonResponse
+  //         .map((todo) => Todo.fromJson(todo))
+  //         .toList(); // Assuming Todo has a fromJson method
+  //   } else {
+  //     throw Exception(
+  //         'Failed to fetch todos with status: ${response.statusCode}');
+  //   }
+  // }
 
   // Add a new todo
   Future<void> addTodo(Todo todo) async {
@@ -159,6 +159,23 @@ class ApiService {
       return Todo.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to edit the todo');
+    }
+  }
+
+  Future<List<Todo>> fetchTodos(String filter) async {
+    final headers = await _getHeaders();
+    final response = await http.get(Uri.parse("$baseUrl/todos?filter=$filter"),
+        headers: headers);
+    if (response.statusCode == 200) {
+      // print("Todo response : ${response.body}");
+      // Decode the JSON response
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse
+          .map((todo) => Todo.fromJson(todo))
+          .toList(); // Assuming Todo has a fromJson method
+    } else {
+      throw Exception(
+          'Failed to fetch todos with status: ${response.statusCode}');
     }
   }
 }

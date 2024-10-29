@@ -22,7 +22,7 @@ class AuthRepository {
   }
 
   Future<void> signup(String name, String email, String password) async {
-    final response = await _apiService.signup(name, email, password);
+    return await _apiService.signup(name, email, password);
   }
 
   Future<Map<String, dynamic>> fetchUserProfile(String userId) async {

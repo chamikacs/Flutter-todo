@@ -7,7 +7,14 @@ abstract class TodoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadTodos extends TodoEvent {}
+class LoadTodos extends TodoEvent {
+  final String filter;
+
+  LoadTodos([this.filter = 'all']);
+
+  @override
+  List<Object?> get props => [filter];
+}
 
 class ClearTodosEvent extends TodoEvent {}
 

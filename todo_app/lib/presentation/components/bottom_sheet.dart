@@ -25,6 +25,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   @override
   void initState() {
     super.initState();
+    print("sate in bottom sheet");
     if (widget.todo != null) {
       titleController.text = widget.todo!.title;
       descriptionController.text = widget.todo!.description;
@@ -165,6 +166,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                   context.read<TodoBloc>().add(AddTodo(newTodo));
                 } else {
                   context.read<TodoBloc>().add(EditTodoRequested(newTodo));
+                  // context.read<TodoBloc>().add(LoadTodos());
                 }
                 Navigator.pop(context);
               },

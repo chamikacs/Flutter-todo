@@ -43,7 +43,7 @@ class DetailTodoScreen extends StatelessWidget {
                       isScrollControlled: true,
                       context: context,
                       builder: (context) => AddTodoBottomSheet(todo: todo),
-                    ).then((_) => context.read<TodoBloc>().add(LoadTodos()));
+                    );
                   },
                 ),
                 IconButton(

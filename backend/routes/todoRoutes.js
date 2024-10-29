@@ -11,10 +11,13 @@ import {
 const todoRouter = express.Router();
 
 todoRouter.route("/").post(requireAuth, CreateTodo).get(requireAuth, GetTodos);
+
 todoRouter
   .route("/:id")
   .get(requireAuth, GetTodoById)
   .put(requireAuth, UpdateTodo)
   .delete(requireAuth, DeleteTodo);
+
+// todoRouter.get("/", requireAuth, FilterTodos)
 
 export default todoRouter;

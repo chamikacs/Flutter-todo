@@ -6,12 +6,24 @@ import 'package:todo_app/repositories/todo_repository.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final TodoRepository todoRepository;
+  String currentFilter = 'all';
 
   TodoBloc(this.todoRepository) : super(TodoLoading()) {
+    // on<LoadTodos>((event, emit) async {
+    //   emit(TodoLoading());
+    //   try {
+    //     final todos = await todoRepository.fetchTodos();
+    //     emit(TodoLoaded(todos));
+    //   } catch (error) {
+    //     emit(TodoError('Failed to load todos: $error'));
+    //   }
+    // });
+
     on<LoadTodos>((event, emit) async {
       emit(TodoLoading());
       try {
-        final todos = await todoRepository.fetchTodos();
+        currentFilter = event.filter;
+        final todos = await todoRepository.fetchTodos(currentFilter);
         emit(TodoLoaded(todos));
       } catch (error) {
         emit(TodoError('Failed to load todos: $error'));
