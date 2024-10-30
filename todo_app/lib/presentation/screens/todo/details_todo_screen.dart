@@ -4,253 +4,219 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/presentation/components/bottom_sheet.dart';
 import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/blocs/todo/todo_bloc.dart';
-import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/blocs/todo/todo_state.dart';
-import 'package:intl/intl.dart';
+import 'package:todo_app/utils.dart';
 
 class DetailTodoScreen extends StatelessWidget {
   final String? todoId;
 
-  DetailTodoScreen({required this.todoId});
+  DetailTodoScreen({super.key, required this.todoId});
 
   final _controller = SuperTooltipController();
 
-  Widget _buildSuperTooltip(DateTime deadline) {
-    return GestureDetector(
-      onTap: () async {
-        await _controller.showTooltip();
-      },
-      child: SuperTooltip(
-        hasShadow: false,
-        showBarrier: true,
-        barrierColor: Colors.transparent,
-        controller: _controller,
-        backgroundColor: AppColors.coral, // Replace with your color variable
-        content: Text(
-          _formatDate(deadline),
-          softWrap: true,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        child: Image.asset(
-          'lib/assets/clock-d.png',
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TodoBloc, TodoState>(
-      builder: (context, state) {
-        if (state is TodoLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is TodoLoaded) {
-          final todo = state.todos.any((t) => t.id == todoId)
-              ? state.todos.firstWhere((t) => t.id == todoId)
-              : null;
+    return Container(
+      color: Colors.white,
+      child: BlocBuilder<TodoBloc, TodoState>(
+        builder: (context, state) {
+          if (state is TodoLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is TodoLoaded) {
+            final todo = state.todos.any((t) => t.id == todoId)
+                ? state.todos.firstWhere((t) => t.id == todoId)
+                : null;
 
-          if (todo == null) {
-            return const Center(child: Text("Todo not found."));
-          }
+            if (todo == null) {
+              return const Center(child: Text("Todo not found."));
+            }
 
-          Uint8List? imageBytes;
-          if (todo.image != null && todo.image!.isNotEmpty) {
-            imageBytes = base64Decode(todo.image!);
-          }
+            Uint8List? imageBytes;
+            if (todo.image != null && todo.image!.isNotEmpty) {
+              imageBytes = base64Decode(todo.image!);
+            }
 
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: AppColors.white,
-              elevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new,
-                    color: AppColors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-              actions: [
-                GestureDetector(
-                  onTap: (todo.deadline != null)
-                      ? () async {
-                          await _controller.showTooltip();
-                        }
-                      : null, // Disable onTap if there's no deadline
-                  child: Opacity(
-                    opacity: todo.deadline != null
-                        ? 1.0
-                        : 0.7, // Set opacity to indicate disabled state
-                    child: todo.deadline != null
-                        ? SuperTooltip(
-                            hasShadow: false,
-                            showBarrier: true,
-                            barrierColor: Colors.transparent,
-                            controller: _controller,
-                            backgroundColor: AppColors.coral,
-                            content: Text(
-                              _formatDate(todo.deadline!),
-                              softWrap: true,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: AppColors.white,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new,
+                      color: AppColors.black),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                actions: [
+                  GestureDetector(
+                    onTap: (todo.deadline != null)
+                        ? () async {
+                            await _controller.showTooltip();
+                          }
+                        : null, // Disable onTap if there's no deadline
+                    child: Opacity(
+                      opacity: todo.deadline != null
+                          ? 1.0
+                          : 0.7, // Set opacity to indicate disabled state
+                      child: todo.deadline != null
+                          ? SuperTooltip(
+                              hasShadow: false,
+                              showBarrier: true,
+                              barrierColor: Colors.transparent,
+                              controller: _controller,
+                              backgroundColor: AppColors.coral,
+                              content: Text(
+                                Utils().formatDate(todo.deadline),
+                                softWrap: true,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            child: Image.asset(
+                              child: Image.asset(
+                                'lib/assets/clock-d.png',
+                                color: Colors.black,
+                              ),
+                            )
+                          : Image.asset(
                               'lib/assets/clock-d.png',
-                              color: Colors.black,
+                              color: Colors
+                                  .grey, // Display gray icon if there's no deadline
                             ),
-                          )
-                        : Image.asset(
-                            'lib/assets/clock-d.png',
-                            color: Colors
-                                .grey, // Display gray icon if there's no deadline
-                          ),
-                  ),
-                ),
-                SizedBox(
-                  width: 11,
-                ),
-                IconButton(
-                  icon: Image.asset('lib/assets/edit-2.png'),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => AddTodoBottomSheet(todo: todo),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Image.asset('lib/assets/trash-2.png'),
-                  onPressed: () => _showDeleteConfirmation(context, todo.id),
-                ),
-              ],
-            ),
-            body: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
                     ),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 16),
-                            Text(
-                              todo.title,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-                            Text(
-                              todo.description,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.black.withOpacity(0.7),
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-
-                            // Display image if available, otherwise show placeholder
-                            if (todo.image != null && todo.image!.isNotEmpty)
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: Image.memory(
-                                  imageBytes!,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            else
-                              Container(
-                                width: double.infinity,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.image,
-                                  color: Colors.grey[500],
-                                  size: 50,
+                  ),
+                  const SizedBox(
+                    width: 11,
+                  ),
+                  IconButton(
+                    icon: Image.asset('lib/assets/edit-2.png'),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) => AddTodoBottomSheet(todo: todo),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Image.asset('lib/assets/trash-2.png'),
+                    onPressed: () => _showDeleteConfirmation(context, todo.id),
+                  ),
+                ],
+              ),
+              body: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                todo.title,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.black,
                                 ),
                               ),
-
-                            Spacer(),
-                            SizedBox(
-                              height: 120,
-                            ),
-
-                            Center(
-                              child: Text(
-                                'Created at ${_formatDate(todo.createdAt)}',
+                              const SizedBox(height: 30),
+                              Text(
+                                todo.description,
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.black.withOpacity(0.6),
+                                  fontSize: 16,
+                                  color: AppColors.black.withOpacity(0.7),
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 30),
 
-                            const SizedBox(height: 30),
-                          ],
+                              // Display image if available, otherwise show placeholder
+                              if (todo.image != null && todo.image!.isNotEmpty)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  child: Image.memory(
+                                    imageBytes!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+
+                              const Spacer(),
+                              const SizedBox(
+                                height: 120,
+                              ),
+
+                              Center(
+                                child: Text(
+                                  'Created at ${Utils().formatDate(todo.createdAt)}',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.black.withOpacity(0.6),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 30),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else if (state is TodoError) {
-          return Center(child: Text(state.error));
-        }
-        return Container();
-      },
+                  );
+                },
+              ),
+            );
+          } else if (state is TodoError) {
+            return Center(child: Text(state.error));
+          }
+          return Container();
+        },
+      ),
     );
   }
 
   void _showDeleteConfirmation(BuildContext context, String? todoId) {
-    showCupertinoDialog(
+    showCupertinoModalPopup(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Text(
-          'Delete TODO',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text('Are you sure you want to delete this todo?'),
+      builder: (context) => CupertinoActionSheet(
         actions: [
-          CupertinoDialogAction(
+          CupertinoActionSheetAction(
+            onPressed: () {
+              if (todoId != null) {
+                context.read<TodoBloc>().add(DeleteTodo(todoId));
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+            },
             isDestructiveAction: true,
-            onPressed: () {},
-            child: Text('Delete TODO'),
-          ),
-          CupertinoDialogAction(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: Colors.green),
+            child: const Text(
+              'Delete TODO',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
-  }
-
-  String _formatDate(DateTime? date) {
-    return date != null ? DateFormat('dd MMMM yyyy').format(date) : 'N/A';
   }
 }

@@ -4,17 +4,17 @@ import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/presentation/screens/todo/details_todo_screen.dart';
 import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/utils.dart';
 
 class TodoCard extends StatelessWidget {
   final Todo todo;
   final String filterOption;
   final TodoBloc todoBloc;
   const TodoCard(
-      {Key? key,
+      {super.key,
       required this.todo,
       required this.filterOption,
-      required this.todoBloc})
-      : super(key: key);
+      required this.todoBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +23,6 @@ class TodoCard extends StatelessWidget {
         return AppColors.peach;
       }
       return AppColors.coral;
-    }
-
-    Image? deadlineIcon() {
-      if (todo.deadline == null) {
-        return Image.asset(
-          'lib/assets/clock.png', // Placeholder for the clock icon
-        );
-      }
-      return null;
     }
 
     return GestureDetector(
@@ -64,7 +55,7 @@ class TodoCard extends StatelessWidget {
               children: [
                 Text(
                   todo.title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     color: AppColors.white,
                     fontWeight: FontWeight.bold,
@@ -81,19 +72,19 @@ class TodoCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 8),
+            // const SizedBox(height: 8),
             Text(
               todo.description,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.white,
                 fontSize: 14,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 30),
             Text(
-              'Created at ', // Assuming `createdAt` is a property in the todo model
+              'Created at ${Utils().formatDate(todo.createdAt)}', // Assuming `createdAt` is a property in the todo model
               style: TextStyle(
                 color: AppColors.white.withOpacity(0.8),
                 fontSize: 12,

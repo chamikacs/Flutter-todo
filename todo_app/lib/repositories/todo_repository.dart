@@ -8,15 +8,6 @@ class TodoRepository {
 
   TodoRepository(this._apiService);
 
-  // Fetch all todos
-  // Future<List<Todo>> fetchTodos() async {
-  //   try {
-  //     return await _apiService.fetchTodos();
-  //   } catch (e) {
-  //     throw Exception('Error fetching todos: $e');
-  //   }
-  // }
-
   // Add a new todo
   Future<void> addTodo(Todo todo, {File? imageFile}) async {
     try {
@@ -35,9 +26,9 @@ class TodoRepository {
     }
   }
 
-  Future<Todo> editTodo(Todo updatedTodo) async {
+  Future<Todo> editTodo(Todo updatedTodo, {File? imageFile}) async {
     try {
-      return await _apiService.editTodo(updatedTodo);
+      return await _apiService.editTodo(updatedTodo, imageFile: imageFile);
     } catch (e) {
       throw Exception('Error adding todo: $e');
     }

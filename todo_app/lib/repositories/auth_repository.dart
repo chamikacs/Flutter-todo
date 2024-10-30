@@ -42,4 +42,12 @@ class AuthRepository {
       throw Exception('Error logging out: $e');
     }
   }
+
+  Future<void> changePassword(String userId, String password) async {
+    try {
+      await _apiService.changePassword(userId, password);
+    } catch (e) {
+      throw Exception('Error logging out: $e');
+    }
+  }
 }

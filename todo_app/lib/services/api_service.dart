@@ -50,16 +50,28 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'name': name, 'email': email, 'password': password}),
     );
-    print('Response body: ${response.body}');
+    // print('Response body: ${response.body}');
     if (response.statusCode == 200) {
-      // Successfully signed up, parse the token and return
       jsonDecode(response.body);
-      // return data; // Return any additional data you might need
     } else {
-      // Return detailed error information
       final errorMessage =
           jsonDecode(response.body)['message'] ?? 'Failed to login';
       throw Exception(errorMessage);
+    }
+  }
+
+  Future<void> changePassword(String userID, String password) async {
+    final headers = await _getHeaders();
+    final response = await http.post(
+      Uri.parse('$baseUrl/auth/$userID'),
+      headers: headers,
+      body: jsonEncode({'newPassword': password}),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch user profile');
     }
   }
 
@@ -85,63 +97,6 @@ class ApiService {
     await prefs.remove('userId');
   }
 
-  // Fetch todos
-  // Future<List<Todo>> fetchTodos() async {
-  //   final headers = await _getHeaders();
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/todos'),
-  //     headers: headers,
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     // print("Todo response : ${response.body}");
-  //     // Decode the JSON response
-  //     List<dynamic> jsonResponse = jsonDecode(response.body);
-  //     return jsonResponse
-  //         .map((todo) => Todo.fromJson(todo))
-  //         .toList(); // Assuming Todo has a fromJson method
-  //   } else {
-  //     throw Exception(
-  //         'Failed to fetch todos with status: ${response.statusCode}');
-  //   }
-  // }
-
-  // Add a new todo
-  // Future<void> addTodo(Todo todo, {File? imageFile}) async {
-  //   final headers = await _getHeaders();
-  //   final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/todos'));
-  //   request.headers.addAll(headers);
-
-  //   request.fields['title'] = todo.title;
-  //   request.fields['description'] = todo.description;
-  //   if (todo.deadline != null) {
-  //     request.fields['deadline'] = todo.deadline!.toIso8601String();
-  //   }
-
-  //   // Add image file if it exists
-  //   if (imageFile != null) {
-  //     request.files.add(
-  //       await http.MultipartFile.fromPath('image', imageFile.path),
-  //     );
-  //   }
-
-  //   // Send the request
-  //   final response = await request.send();
-  //   if (response.statusCode != 201) {
-  //     final responseBody = await response.stream.bytesToString();
-  //     print('Body: $responseBody');
-
-  //     // Optionally, decode JSON if the response is in JSON format
-  //     try {
-  //       final decodedBody = jsonDecode(responseBody);
-  //       print('Decoded Body: $decodedBody');
-  //     } catch (e) {
-  //       print('Error decoding JSON: $e');
-  //     }
-  //     throw Exception('Failed to add todo');
-  //   }
-  // }
-
   Future<void> addTodo(Todo todo, {File? imageFile}) async {
     final headers = await _getHeaders();
     final uri = Uri.parse('$baseUrl/todos');
@@ -160,10 +115,33 @@ class ApiService {
     final response =
         await http.post(uri, headers: headers, body: jsonEncode(todoData));
 
-    // print(response.body);
-
     if (response.statusCode != 201) {
       throw Exception('Failed to add todo');
+    }
+  }
+
+  // Edit a todo by ID
+  Future<Todo> editTodo(Todo todo, {File? imageFile}) async {
+    final headers = await _getHeaders();
+    // print(todo.id);
+    String? image;
+    if (imageFile != null) {
+      final bytes = await imageFile.readAsBytes();
+      image = base64Encode(bytes); // Encode image to base64
+    }
+    final response = await http.put(Uri.parse('$baseUrl/todos/${todo.id}'),
+        headers: headers,
+        body: jsonEncode({
+          'title': todo.title,
+          'description': todo.description,
+          'deadline': todo.deadline?.toIso8601String(),
+          'image': image
+        }));
+    // print(response.body);
+    if (response.statusCode == 200) {
+      return Todo.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to edit the todo');
     }
   }
 
@@ -179,26 +157,6 @@ class ApiService {
       throw Exception('Failed to delete todo');
     } else {
       print("Deleted successfully");
-    }
-  }
-
-  // Edit a todo by ID
-  Future<Todo> editTodo(Todo todo) async {
-    final headers = await _getHeaders();
-    print(todo.id);
-    final response = await http.put(Uri.parse('$baseUrl/todos/${todo.id}'),
-        headers: headers,
-        body: jsonEncode({
-          'title': todo.title,
-          'description': todo.description,
-          'deadline': todo.deadline?.toIso8601String(),
-          'image': todo.image
-        }));
-    print(response.body);
-    if (response.statusCode == 200) {
-      return Todo.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to edit the todo');
     }
   }
 

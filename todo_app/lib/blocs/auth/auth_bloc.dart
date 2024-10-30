@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
-  final TodoBloc todoBloc; // Reference to TodoBloc
+  final TodoBloc todoBloc;
 
   AuthBloc(this.authRepository, this.todoBloc) : super(AuthInitial()) {
     on<LoginRequested>((event, emit) async {
@@ -63,6 +63,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         todoBloc.add(ClearTodosEvent());
       } catch (e) {
         emit(AuthError("Failed to load profile: ${e.toString()}"));
+      }
+    });
+
+    on<ChangePasswordRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await authRepository.changePassword(event.userId, event.password);
+        emit(ChangePasswordSuccess("Password changed successfully"));
+      } catch (e) {
+        emit(ChangePasswordError(e.toString()));
       }
     });
   }

@@ -9,16 +9,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   String currentFilter = 'all';
 
   TodoBloc(this.todoRepository) : super(TodoLoading()) {
-    // on<LoadTodos>((event, emit) async {
-    //   emit(TodoLoading());
-    //   try {
-    //     final todos = await todoRepository.fetchTodos();
-    //     emit(TodoLoaded(todos));
-    //   } catch (error) {
-    //     emit(TodoError('Failed to load todos: $error'));
-    //   }
-    // });
-
     on<LoadTodos>((event, emit) async {
       emit(TodoLoading());
       try {
@@ -47,9 +37,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<EditTodoRequested>((event, emit) async {
       emit(EditTodoLoading());
       try {
-        final updatedTodo = await todoRepository.editTodo(event.updatedTodo);
+        final updatedTodo = await todoRepository.editTodo(event.updatedTodo,
+            imageFile: event.imageFile);
         emit(EditTodoSuccess(updatedTodo));
-        add(LoadTodos()); // Optionally reload todos after editing
+        add(LoadTodos());
       } catch (e) {
         emit(EditTodoError("Failed to edit todo: ${e.toString()}"));
       }

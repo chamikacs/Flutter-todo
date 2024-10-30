@@ -1,14 +1,13 @@
 import { Todo } from "../models/Todo.js";
 import fs from "fs";
 
-
-
-
 export const CreateTodo = async (req, res) => {
   try {
     const { title, description, deadline, image } = req.body;
-    
-    {/* Use this code only to save the image in the uploads folder */}
+
+    {
+      /* Use this code only to save the image in the uploads folder */
+    }
     // let imagePath = null;
     // if (image) {
     //   // Decode the base64 string and save it as an image file
@@ -29,16 +28,35 @@ export const CreateTodo = async (req, res) => {
     const result = await todo.save();
     return res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating todo', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating todo", error: error.message });
+  }
+};
+
+// Update a to-do
+export const UpdateTodo = async (req, res) => {
+  try {
+    const { title, description, deadline, image } = req.body;
+    const todo = await Todo.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      { title, description, deadline, image },
+      { new: true }
+    );
+    if (!todo) return res.status(404).json({ message: "Todo not found" });
+    console.log("updated");
+    return res.status(200).json(todo);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating todo", error });
   }
 };
 
 export const GetTodos = async (req, res) => {
-  console.log('FilterTodos function triggered');
+  console.log("FilterTodos function triggered");
   try {
     // const { filterType = "all" } = req.query;
     const { filter } = req.query;
-    
+
     let query = { userId: req.user.id };
     let todos;
     switch (filter) {
@@ -61,22 +79,6 @@ export const GetTodos = async (req, res) => {
   }
 };
 
-
-// export const GetTodos = async (req, res) => {
-//   console.log('Get todos function triggered');
-//   try {
-//     const todos = await Todo.find({ userId: req.user.id });
-//     if (!todos) {
-//       res
-//         .status(400)
-//         .send({ message: `Cannot find Todos for User : ${req.user.id}` });
-//     }
-//     return res.status(200).json(todos);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching todos", error });
-//   }
-// };
-
 // Get a specific to-do by ID
 export const GetTodoById = async (req, res) => {
   try {
@@ -88,23 +90,6 @@ export const GetTodoById = async (req, res) => {
     return res.status(200).json(todo);
   } catch (error) {
     res.status(500).json({ message: "Error fetching todo", error });
-  }
-};
-
-// Update a to-do
-export const UpdateTodo = async (req, res) => {
-  try {
-    const { title, description, deadline, image } = req.body;
-    const todo = await Todo.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.id },
-      { title, description, deadline, image },
-      { new: true }
-    );
-    if (!todo) return res.status(404).json({ message: "Todo not found" });
-    console.log("updated");
-    return res.status(200).json(todo);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating todo", error });
   }
 };
 
@@ -121,4 +106,3 @@ export const DeleteTodo = async (req, res) => {
     res.status(500).json({ message: "Error deleting todo", error });
   }
 };
-

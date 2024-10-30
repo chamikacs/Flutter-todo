@@ -38,3 +38,21 @@ class UserProfileLoaded extends AuthState {
   @override
   List<Object?> get props => [userProfile];
 }
+
+class ChangePasswordSuccess extends AuthState {
+  final String message;
+
+  ChangePasswordSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class ChangePasswordError extends AuthState {
+  final String error;
+
+  ChangePasswordError(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}

@@ -1,5 +1,6 @@
 import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, email: user.email }, process.env.SECRET, {
@@ -49,6 +50,30 @@ export const GetUserProfile = async (req, res) => {
     }
 
     return res.status(200).json(results);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const ChangePassword = async (req, res) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Find the user by id
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    // Update the password and save the user
+    user.password = hash;
+    await user.save();
+
+    return res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

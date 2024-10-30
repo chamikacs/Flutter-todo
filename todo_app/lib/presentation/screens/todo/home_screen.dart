@@ -100,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 30,
                             width: 30,
                           ),
-                          SizedBox(width: 10), // Space between icon and text
+                          const SizedBox(
+                              width: 10), // Space between icon and text
                           const Text(
                             'LIST OF TODO',
                             style: TextStyle(
@@ -176,13 +177,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context, state) {
                         if (state is TodoLoading) {
                           // Show loading indicator while fetching todos
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (state is TodoLoaded) {
                           final todos = state.todos; // Get the list of todos
 
                           if (todos.isEmpty) {
                             // Show message if no todos are available
-                            return Center(
+                            return const Center(
                               child: Text(
                                 'No Todos Available',
                                 style: TextStyle(color: AppColors.black),
@@ -205,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         } else if (state is TodoError) {
                           // Show error message if fetching todos fails
-                          return Center(
+                          return const Center(
                             child: Text(
                               'Failed to load todos',
                               style: TextStyle(color: AppColors.black),
@@ -227,18 +229,22 @@ class _HomeScreenState extends State<HomeScreen> {
             // Show bottom sheet to add a new todo on button tap
             showModalBottomSheet(
               context: context,
-              isScrollControlled: true, // Allow bottom sheet to take more space
-              builder: (context) =>
-                  const AddTodoBottomSheet(), // Bottom sheet widget
+              isScrollControlled: true,
+              builder: (context) => const AddTodoBottomSheet(),
             );
           },
-          child: SizedBox(
-            height: 92,
-            width: 92,
-            child: Image.asset(
-              'lib/assets/plus-circle.png', // Plus icon for adding todo
-              height: 92, // Adjust the size as needed
+          child: Material(
+            elevation: 40,
+            shape: const CircleBorder(),
+            color: Colors.transparent,
+            child: SizedBox(
+              height: 92,
               width: 92,
+              child: Image.asset(
+                'lib/assets/plus-circle.png', // Plus icon for adding todo
+                height: 92, // Adjust the size as needed
+                width: 92,
+              ),
             ),
           ),
         ),

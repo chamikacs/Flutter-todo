@@ -32,3 +32,10 @@ class FetchUserProfile extends AuthEvent {
   @override
   List<Object?> get props => [userId];
 }
+
+class ChangePasswordRequested extends AuthEvent {
+  final String userId;
+  final String password;
+
+  ChangePasswordRequested({required this.userId, required this.password});
+}

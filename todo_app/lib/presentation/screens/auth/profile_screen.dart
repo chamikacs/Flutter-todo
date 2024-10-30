@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app/app_colors.dart';
+import 'package:todo_app/presentation/components/profile_info_row.dart';
+import 'package:todo_app/presentation/screens/auth/change_password.dart';
 import 'package:todo_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:todo_app/blocs/auth/auth_bloc.dart';
 import 'package:todo_app/blocs/auth/auth_event.dart';
@@ -19,17 +22,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('To Do List'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              // Navigate to settings screen
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(),
       body: FutureBuilder<String?>(
         future: _loadUserId(),
         builder: (context, snapshot) {
@@ -90,8 +83,16 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 TextButton(
-                                  onPressed: () {
-                                    // Placeholder for changing the password
+                                  onPressed: () async {
+                                    String? userId = await _loadUserId();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChangePasswordScreen(
+                                                userID: userId,
+                                              )),
+                                    );
                                   },
                                   child: const Text(
                                     'Change Password',
@@ -106,7 +107,7 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(height: 32),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepOrangeAccent,
+                                backgroundColor: AppColors.peach,
                                 minimumSize: const Size(double.infinity, 50),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -140,38 +141,6 @@ class ProfileScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class ProfileInfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const ProfileInfoRow({
-    required this.label,
-    required this.value,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Colors.grey),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            color: Colors.deepOrangeAccent,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 }

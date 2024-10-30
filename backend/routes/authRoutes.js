@@ -4,22 +4,19 @@ import {
   SignupUser,
   LoginUser,
   GetUserProfile,
+  ChangePassword,
 } from "../controllers/authController.js";
 
 
 const authRouter = express.Router();
 
 
-authRouter.post("/signup", async (req, res) => {
-  await SignupUser(req, res);
-});
+authRouter.post("/signup", SignupUser);
 
-authRouter.post("/login", async (req, res) => {
-  await LoginUser(req, res);
-});
+authRouter.post("/login", LoginUser);
 
-authRouter.get("/:id", requireAuth, async (req, res) => {
-  await GetUserProfile(req, res);
-});
+authRouter.get("/:id", requireAuth, GetUserProfile);
+
+authRouter.post("/:id", requireAuth, ChangePassword)
 
 export default authRouter;
