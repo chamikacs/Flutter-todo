@@ -114,36 +114,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             value: TodoFilter.all,
                             child: Text(
                               'All',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: selectedFilter == TodoFilter.all
-                                    ? Colors.orange
-                                    : null,
-                              ),
+                              style: selectedFilter == TodoFilter.all
+                                  ? AppTextStyles.headline7(AppColors.coral)
+                                  : AppTextStyles.headline7(Colors.black),
                             ),
                           ),
                           PopupMenuItem<TodoFilter>(
                             value: TodoFilter.time,
                             child: Text(
                               'By Time',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: selectedFilter == TodoFilter.time
-                                    ? Colors.orange
-                                    : null,
-                              ),
+                              style: selectedFilter == TodoFilter.time
+                                  ? AppTextStyles.headline7(AppColors.coral)
+                                  : AppTextStyles.headline7(Colors.black),
                             ),
                           ),
                           PopupMenuItem<TodoFilter>(
                             value: TodoFilter.deadline,
                             child: Text(
                               'By Deadline',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: selectedFilter == TodoFilter.deadline
-                                    ? Colors.orange
-                                    : null,
-                              ),
+                              style: selectedFilter == TodoFilter.deadline
+                                  ? AppTextStyles.headline7(AppColors.coral)
+                                  : AppTextStyles.headline7(Colors.black),
                             ),
                           ),
                         ],

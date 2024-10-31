@@ -3,7 +3,6 @@ import 'package:todo_app/app_colors.dart';
 
 class AppTextStyles {
   static const String _fontFamilyBebas = 'BebasNeue';
-  static const String _fontFamilyMontserrat = 'Montserrat';
   static const String _fontFamilyMontserratRegular = 'Montserrat-Regular';
   static const String _fontFamilyMontserratSemiBold = 'Montserrat-SemiBold';
 
@@ -40,6 +39,14 @@ class AppTextStyles {
     fontSize: 16,
     color: Colors.white,
   );
+
+  static TextStyle headline7(Color color) {
+    return TextStyle(
+      fontFamily: _fontFamilyMontserratSemiBold,
+      fontSize: 16,
+      color: color,
+    );
+  }
 
   static TextStyle body1(Color color) {
     return TextStyle(
