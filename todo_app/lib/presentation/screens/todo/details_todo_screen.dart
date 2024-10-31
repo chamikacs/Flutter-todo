@@ -58,9 +58,7 @@ class DetailTodoScreen extends StatelessWidget {
                           }
                         : null, // Disable onTap if there's no deadline
                     child: Opacity(
-                      opacity: todo.deadline != null
-                          ? 1.0
-                          : 0.7, // Set opacity to indicate disabled state
+                      opacity: todo.deadline != null ? 1.0 : 0.7,
                       child: todo.deadline != null
                           ? SuperTooltip(
                               hasShadow: false,
@@ -83,8 +81,7 @@ class DetailTodoScreen extends StatelessWidget {
                             )
                           : Image.asset(
                               'lib/assets/clock-d.png',
-                              color: Colors
-                                  .grey, // Display gray icon if there's no deadline
+                              color: Colors.grey,
                             ),
                     ),
                   ),
@@ -138,8 +135,6 @@ class DetailTodoScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 30),
-
-                              // Display image if available, otherwise show placeholder
                               if (todo.image != null && todo.image!.isNotEmpty)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(16.0),
@@ -148,12 +143,10 @@ class DetailTodoScreen extends StatelessWidget {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-
                               const Spacer(),
                               const SizedBox(
                                 height: 120,
                               ),
-
                               Center(
                                 child: Text(
                                   'Created at ${Utils().formatDate(todo.createdAt)}',
@@ -163,7 +156,6 @@ class DetailTodoScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               const SizedBox(height: 30),
                             ],
                           ),

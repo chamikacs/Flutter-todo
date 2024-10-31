@@ -19,6 +19,7 @@ export const SignupUser = async (req, res) => {
       .status(200)
       .send({ message: "User created successfully", user: user, token: token });
   } catch (error) {
+    console.log(error.message)
     res.status(400).json({ error: error.message });
   }
 };
@@ -43,13 +44,13 @@ export const LoginUser = async (req, res) => {
 export const GetUserProfile = async (req, res) => {
   const { id } = req.params;
   try {
-    const results = await User.findById(id);
+    const user = await User.findById(id);
 
-    if (!results) {
+    if (!user) {
       return res.status(404).send({ message: `Cannot find user for ${id}` });
     }
 
-    return res.status(200).json(results);
+    return res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -60,7 +61,6 @@ export const ChangePassword = async (req, res) => {
   const { newPassword } = req.body;
 
   try {
-    // Find the user by id
     const user = await User.findById(id);
 
     if (!user) {
@@ -69,7 +69,6 @@ export const ChangePassword = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(newPassword, salt);
 
-    // Update the password and save the user
     user.password = hash;
     await user.save();
 

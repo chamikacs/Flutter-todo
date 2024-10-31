@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { requireAuth } from "../middleware/AuthMiddleWare.js";
+import { requireAuth } from "../middleware/authMiddleware.js";
 import {
   CreateTodo,
   DeleteTodo,
@@ -7,6 +7,7 @@ import {
   GetTodos,
   UpdateTodo,
 } from "../controllers/todoController.js";
+
 
 const todoRouter = express.Router();
 

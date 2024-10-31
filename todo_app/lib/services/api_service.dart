@@ -32,13 +32,11 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      // Successfully logged in, parse the token and return
       final data = jsonDecode(response.body);
-      return data; // Return any additional data you might need
+      return data;
     } else {
-      // Return detailed error information
       final errorMessage =
-          jsonDecode(response.body)['message'] ?? 'Failed to login';
+          jsonDecode(response.body)['error'] ?? 'Failed to login';
       throw Exception(errorMessage);
     }
   }
@@ -55,11 +53,12 @@ class ApiService {
       jsonDecode(response.body);
     } else {
       final errorMessage =
-          jsonDecode(response.body)['message'] ?? 'Failed to login';
+          jsonDecode(response.body)['error'] ?? 'Failed to signup';
       throw Exception(errorMessage);
     }
   }
 
+  //Change password method
   Future<void> changePassword(String userID, String password) async {
     final headers = await _getHeaders();
     final response = await http.post(
@@ -75,12 +74,15 @@ class ApiService {
     }
   }
 
+  // Load user profile mthod
   Future<Map<String, dynamic>> fetchUserProfile(String userId) async {
     final headers = await _getHeaders();
     final response = await http.get(
-      Uri.parse('$baseUrl/auth/$userId'), // Adjust endpoint as needed
+      Uri.parse('$baseUrl/auth/$userId'),
       headers: headers,
     );
+
+    print(response.body);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -106,7 +108,6 @@ class ApiService {
       if (todo.deadline != null) 'deadline': todo.deadline!.toIso8601String(),
     };
 
-    // If there's an image, encode it to base64 and add it to the request
     if (imageFile != null) {
       final bytes = await imageFile.readAsBytes();
       todoData['image'] = base64Encode(bytes); // Encode image to base64
@@ -114,7 +115,7 @@ class ApiService {
 
     final response =
         await http.post(uri, headers: headers, body: jsonEncode(todoData));
-
+    // print(response.body);
     if (response.statusCode != 201) {
       throw Exception('Failed to add todo');
     }
@@ -160,6 +161,7 @@ class ApiService {
     }
   }
 
+  // Get all todos
   Future<List<Todo>> fetchTodos(String filter) async {
     final headers = await _getHeaders();
     final response = await http.get(Uri.parse("$baseUrl/todos?filter=$filter"),
@@ -168,9 +170,7 @@ class ApiService {
       // print("Todo response : ${response.body}");
       // Decode the JSON response
       List<dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse
-          .map((todo) => Todo.fromJson(todo))
-          .toList(); // Assuming Todo has a fromJson method
+      return jsonResponse.map((todo) => Todo.fromJson(todo)).toList();
     } else {
       throw Exception(
           'Failed to fetch todos with status: ${response.statusCode}');

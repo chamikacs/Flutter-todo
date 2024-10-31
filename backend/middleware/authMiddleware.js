@@ -20,7 +20,7 @@ export const requireAuth = async (req, res, next) => {
     // console.log(req.user)
     next();
   } catch (error) {
-    console.error("JWT verification error:", error); // Log the error for debugging
+    console.error("JWT verification error:", error);
     res.status(401).send({ message: error.message });
   }
 };

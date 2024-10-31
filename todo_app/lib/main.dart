@@ -9,12 +9,11 @@ import 'package:todo_app/blocs/auth/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Initialize Flutter binding
+  WidgetsFlutterBinding.ensureInitialized();
   final apiService = ApiService();
   final authRepository = AuthRepository(apiService);
   final todoRepository = TodoRepository(apiService);
 
-  // Create TodoBloc first, then AuthBloc
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => TodoBloc(todoRepository)),

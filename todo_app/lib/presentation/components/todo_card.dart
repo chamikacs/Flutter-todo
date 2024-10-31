@@ -26,9 +26,7 @@ class TodoCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      // Make the card clickable
       onTap: () {
-        // Navigate to the DetailTodoScreen
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -64,11 +62,9 @@ class TodoCard extends StatelessWidget {
                 if (todo.deadline != null)
                   IconButton(
                     icon: Image.asset(
-                      'lib/assets/clock.png', // Placeholder for the clock icon
+                      'lib/assets/clock.png',
                     ),
-                    onPressed: () {
-                      // Handle timer/clock action
-                    },
+                    onPressed: () {},
                   ),
               ],
             ),
@@ -84,7 +80,7 @@ class TodoCard extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             Text(
-              'Created at ${Utils().formatDate(todo.createdAt)}', // Assuming `createdAt` is a property in the todo model
+              'Created at ${Utils().formatDate(todo.createdAt)}',
               style: TextStyle(
                 color: AppColors.white.withOpacity(0.8),
                 fontSize: 12,

@@ -56,7 +56,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Expanded(
                         child: Center(
                           child: Image.asset(
-                            'lib/assets/union-sign.png', // Replace with your actual image path
+                            'lib/assets/union-sign.png',
                             height: 180,
                             width: 180,
                             fit: BoxFit.contain,
@@ -84,7 +84,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           const SizedBox(height: 16.0),
-
                           TextFormField(
                             controller: passwordController,
                             decoration: InputDecoration(
@@ -113,7 +112,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           const SizedBox(height: 8.0),
-
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -127,7 +125,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           const SizedBox(height: 16.0),
-
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.peach,
@@ -155,7 +152,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           const SizedBox(height: 16.0),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -176,8 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(
-                              height: 24.0), // Extra spacing at the bottom
+                          const SizedBox(height: 24.0),
                         ],
                       ),
                     ],

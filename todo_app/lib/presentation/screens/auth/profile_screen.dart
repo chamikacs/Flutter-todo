@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
               if (state is AuthUnauthenticated) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => SignInScreen()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
               }
             },
@@ -132,10 +132,9 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   );
-                } else if (state is AuthError) {
-                  return Center(child: Text(state.message));
+                } else {
+                  return const Center(child: Text('No Profile Data'));
                 }
-                return const Center(child: Text('No Profile Data'));
               },
             ),
           );

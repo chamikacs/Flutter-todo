@@ -9,7 +9,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 
 class AddTodoBottomSheet extends StatefulWidget {
-  final Todo? todo; // Optional parameter for editing
+  final Todo? todo;
   const AddTodoBottomSheet({super.key, this.todo});
 
   @override
@@ -22,6 +22,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
   DateTime? selectedDate;
   File? _selectedImage;
   final picker = ImagePicker();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -72,127 +73,144 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
       child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            TextField(
-              controller: titleController,
-              decoration: InputDecoration(
-                hintText: 'Title',
-                hintStyle: const TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: const Color(0xFFEAB6A2),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(
+                height: 30,
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: descriptionController,
-              maxLines: 8,
-              decoration: InputDecoration(
-                hintText: 'Description',
-                hintStyle: const TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: const Color(0xFFEAB6A2),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+              TextFormField(
+                controller: titleController,
+                decoration: InputDecoration(
+                  hintText: 'Title',
+                  hintStyle: const TextStyle(color: Colors.white),
+                  filled: true,
+                  fillColor: const Color(0xFFEAB6A2),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter Todo name";
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: selectedDate == null
-                        ? 'Deadline (Optional)'
-                        : 'Deadline: ${DateFormat("dd MMMM yyyy").format(selectedDate!)}',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    filled: true,
-                    fillColor: const Color(0xFFEAB6A2),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: descriptionController,
+                maxLines: 8,
+                decoration: InputDecoration(
+                  hintText: 'Description',
+                  hintStyle: const TextStyle(color: Colors.white),
+                  filled: true,
+                  fillColor: const Color(0xFFEAB6A2),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter Todo description";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: AbsorbPointer(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: selectedDate == null
+                          ? 'Deadline (Optional)'
+                          : 'Deadline: ${DateFormat("dd MMMM yyyy").format(selectedDate!)}',
+                      labelStyle: const TextStyle(color: Colors.white),
+                      filled: true,
+                      fillColor: const Color(0xFFEAB6A2),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon:
+                          const Icon(Icons.calendar_today, color: Colors.white),
                     ),
-                    suffixIcon:
-                        const Icon(Icons.calendar_today, color: Colors.white),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: _pickImageFromGallery,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAB6A2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(Icons.image, color: Colors.white),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _selectedImage == null && widget.todo == null
-                            ? 'Add Image (Optional)'
-                            : _selectedImage != null && widget.todo == null
-                                ? 'Image Selected' // Only image is selected
-                                : widget.todo != null && _selectedImage == null
-                                    ? 'Update Image' // Todo is not null
-                                    : 'Image Updated', // Both are not null
-                        style: TextStyle(color: Colors.white),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: _pickImageFromGallery,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEAB6A2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.image, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _selectedImage == null && widget.todo == null
+                              ? 'Add Image (Optional)'
+                              : _selectedImage != null && widget.todo == null
+                                  ? 'Image Selected' // Only image is selected
+                                  : widget.todo != null &&
+                                          _selectedImage == null
+                                      ? 'Update Image' // Todo is not null
+                                      : 'Image Updated', // Both are not null
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              onPressed: () {
-                final newTodo = Todo(
-                  id: widget.todo?.id,
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  deadline: selectedDate,
-                );
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    final newTodo = Todo(
+                      id: widget.todo?.id,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      deadline: selectedDate,
+                    );
 
-                // Dispatch the add or edit event with the selected image file
-                if (widget.todo == null) {
-                  context
-                      .read<TodoBloc>()
-                      .add(AddTodo(newTodo, imageFile: _selectedImage));
-                } else {
-                  context.read<TodoBloc>().add(
-                      EditTodoRequested(newTodo, imageFile: _selectedImage));
-                }
-                Navigator.pop(context);
-              },
-              child: Text(
-                widget.todo == null ? 'ADD TODO' : 'EDIT TODO',
-                style: const TextStyle(color: Color(0xFFE8A498)),
+                    if (widget.todo == null) {
+                      context
+                          .read<TodoBloc>()
+                          .add(AddTodo(newTodo, imageFile: _selectedImage));
+                    } else {
+                      context.read<TodoBloc>().add(EditTodoRequested(newTodo,
+                          imageFile: _selectedImage));
+                    }
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text(
+                  widget.todo == null ? 'ADD TODO' : 'EDIT TODO',
+                  style: const TextStyle(color: AppColors.peach),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 50,
-            )
-          ],
+              const SizedBox(
+                height: 50,
+              )
+            ],
+          ),
         ),
       ),
     );

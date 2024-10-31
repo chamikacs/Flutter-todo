@@ -8,21 +8,28 @@ class AuthRepository {
   AuthRepository(this._apiService);
 
   Future<String> login(String email, String password) async {
-    final response = await _apiService.login(email, password);
-    print("response : ${response}");
-    final token = response['token'];
-    final userId = response['user']['_id'];
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('authToken', token);
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setString('userId', userId);
-
-    // print(token);
-    return token;
+    try {
+      final response = await _apiService.login(email, password);
+      final token = response['token'];
+      final userId = response['user']['_id'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('authToken', token);
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userId', userId);
+      // print(token);
+      return token;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future<void> signup(String name, String email, String password) async {
-    return await _apiService.signup(name, email, password);
+    try {
+      await _apiService.signup(name, email, password);
+    } catch (e) {
+      print("Error in signup");
+      throw Exception(e);
+    }
   }
 
   Future<Map<String, dynamic>> fetchUserProfile(String userId) async {

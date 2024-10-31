@@ -52,9 +52,7 @@ export const UpdateTodo = async (req, res) => {
 };
 
 export const GetTodos = async (req, res) => {
-  console.log("FilterTodos function triggered");
   try {
-    // const { filterType = "all" } = req.query;
     const { filter } = req.query;
 
     let query = { userId: req.user.id };

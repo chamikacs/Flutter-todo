@@ -21,7 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final _formKey = GlobalKey<FormState>(); // Form key for validation
+  final _formKey = GlobalKey<FormState>();
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
@@ -29,17 +29,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: Text('Sign Up')),
       body: BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) =>
+            current is! AuthLoading && current != previous,
         listener: (context, state) {
           if (state is AuthSignedUp) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SignInScreen()),
-            );
-          } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              MaterialPageRoute(builder: (context) => const SignInScreen()),
             );
           }
         },
@@ -57,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: Center(
                         child: Image.asset(
-                          'lib/assets/union-sign.png', // Replace with your actual image path
+                          'lib/assets/union-sign.png',
                           height: 180,
                           width: 180,
                           fit: BoxFit.contain,
@@ -180,10 +177,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               context.read<AuthBloc>().add(
                                     SignupRequested(name, email, password),
                                   );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Successfully Signed Up')),
-                              );
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //       content: Text('Successfully Signed Up')),
+                              // );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -210,7 +207,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 16.0),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Go back to Sign In screen
+                        Navigator.pop(context);
                       },
                       child: const Text(
                         'Already have an account? Sign In',

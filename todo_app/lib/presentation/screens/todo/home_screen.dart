@@ -26,13 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Load todos when the HomeScreen is initialized
     BlocProvider.of<TodoBloc>(context).add(LoadTodos(selectedFilter.name));
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Future<void> _refreshTodos() async {
     BlocProvider.of<TodoBloc>(context).add(LoadTodos(selectedFilter.name));
   }
 
@@ -40,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        // Navigate to SignInScreen if the user is unauthenticated
         if (state is AuthUnauthenticated) {
           Navigator.pushReplacement(
             context,
@@ -51,9 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
-          automaticallyImplyLeading: false, // Do not show the back button
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.white,
-          elevation: 0, // Remove shadow from the AppBar
+          elevation: 0,
           title: Container(
             alignment: Alignment.centerLeft,
             child: const Text(
@@ -67,9 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              icon: Image.asset('lib/assets/settings.png'), // Settings icon
+              icon: Image.asset('lib/assets/settings.png'),
               onPressed: () {
-                // Navigate to the ProfileScreen on press
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -82,26 +77,21 @@ class _HomeScreenState extends State<HomeScreen> {
         body: BlocBuilder<TodoBloc, TodoState>(
           builder: (context, state) {
             return Padding(
-              padding:
-                  const EdgeInsets.all(16.0), // Add padding around the content
+              padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start, // Align items to the start
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Distribute space evenly
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        // Wrap the first two items in another Row for alignment
                         children: [
                           Image.asset(
-                            'lib/assets/Union.png', // Icon for the list
+                            'lib/assets/Union.png',
                             height: 30,
                             width: 30,
                           ),
-                          const SizedBox(
-                              width: 10), // Space between icon and text
+                          const SizedBox(width: 10),
                           const Text(
                             'LIST OF TODO',
                             style: TextStyle(
@@ -117,15 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Image.asset('lib/assets/filter.png'), // Filter icon
                         onSelected: (TodoFilter filter) {
                           setState(() {
-                            selectedFilter = filter; // Update selected filter
+                            selectedFilter = filter;
                           });
-                          // Optionally, you can trigger a filter action here
                           BlocProvider.of<TodoBloc>(context)
                               .add(LoadTodos(selectedFilter.name));
                         },
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         color: Colors.white,
                         itemBuilder: (BuildContext context) =>
@@ -170,20 +158,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16), // Space between title and list
-
+                  const SizedBox(height: 16),
                   Expanded(
                     child: BlocBuilder<TodoBloc, TodoState>(
                       builder: (context, state) {
                         if (state is TodoLoading) {
-                          // Show loading indicator while fetching todos
                           return const Center(
                               child: CircularProgressIndicator());
                         } else if (state is TodoLoaded) {
-                          final todos = state.todos; // Get the list of todos
+                          final todos = state.todos;
 
                           if (todos.isEmpty) {
-                            // Show message if no todos are available
                             return const Center(
                               child: Text(
                                 'No Todos Available',
@@ -192,30 +177,42 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
 
-                          // Display list of todos
-                          return ListView.builder(
-                            itemCount: todos.length, // Set the number of items
-                            itemBuilder: (context, index) {
-                              final todo =
-                                  todos[index]; // Get todo at current index
-                              return TodoCard(
-                                todo: todo,
-                                filterOption: selectedFilter.name,
-                                todoBloc: BlocProvider.of<TodoBloc>(context),
-                              ); // Display each todo item
-                            },
+                          return RefreshIndicator(
+                            onRefresh: _refreshTodos,
+                            child: ListView.builder(
+                              itemCount: todos.length,
+                              itemBuilder: (context, index) {
+                                final todo = todos[index];
+                                return TodoCard(
+                                  todo: todo,
+                                  filterOption: selectedFilter.name,
+                                  todoBloc: BlocProvider.of<TodoBloc>(context),
+                                );
+                              },
+                            ),
                           );
                         } else if (state is TodoError) {
-                          // Show error message if fetching todos fails
-                          return const Center(
-                            child: Text(
-                              'Failed to load todos',
-                              style: TextStyle(color: AppColors.black),
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Failed to load todos',
+                                  style: TextStyle(color: AppColors.black),
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _refreshTodos();
+                                  },
+                                  child: const Text('Retry'),
+                                ),
+                              ],
                             ),
                           );
                         }
 
-                        return Container(); // Return empty container if no state matched
+                        return Container();
                       },
                     ),
                   ),
@@ -226,7 +223,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton: GestureDetector(
           onTap: () {
-            // Show bottom sheet to add a new todo on button tap
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
@@ -241,8 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 92,
               width: 92,
               child: Image.asset(
-                'lib/assets/plus-circle.png', // Plus icon for adding todo
-                height: 92, // Adjust the size as needed
+                'lib/assets/plus-circle.png',
+                height: 92,
                 width: 92,
               ),
             ),

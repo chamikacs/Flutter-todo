@@ -5,14 +5,24 @@ import 'package:todo_app/blocs/auth/auth_bloc.dart';
 import 'package:todo_app/blocs/auth/auth_event.dart';
 import 'package:todo_app/blocs/auth/auth_state.dart';
 
-class ChangePasswordScreen extends StatelessWidget {
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+class ChangePasswordScreen extends StatefulWidget {
   final String? userID;
 
   ChangePasswordScreen({super.key, required this.userID});
+
+  @override
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+}
+
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final TextEditingController newPasswordController = TextEditingController();
+
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +34,7 @@ class ChangePasswordScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
-            Navigator.pop(context); // Navigate back on success
+            Navigator.pop(context);
           } else if (state is ChangePasswordError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Change password Page: ${state.error}")),
@@ -40,11 +50,10 @@ class ChangePasswordScreen extends StatelessWidget {
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Expanded Image Logo at the Top
                       Expanded(
                         child: Center(
                           child: Image.asset(
-                            'lib/assets/union-sign.png', // Replace with your actual image path
+                            'lib/assets/union-sign.png',
                             height: 180,
                             width: 180,
                             fit: BoxFit.contain,
@@ -59,12 +68,21 @@ class ChangePasswordScreen extends StatelessWidget {
                             decoration: InputDecoration(
                               labelText: 'New Password',
                               prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: const Icon(Icons.visibility_off),
+                              suffixIcon: IconButton(
+                                icon: Icon(isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            obscureText: true,
+                            obscureText: !isPasswordVisible,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your new password';
@@ -73,18 +91,27 @@ class ChangePasswordScreen extends StatelessWidget {
                             },
                           ),
                           const SizedBox(height: 16.0),
-
                           TextFormField(
                             controller: confirmPasswordController,
                             decoration: InputDecoration(
                               labelText: 'Confirm Password',
                               prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: const Icon(Icons.visibility_off),
+                              suffixIcon: IconButton(
+                                icon: Icon(isConfirmPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    isConfirmPasswordVisible =
+                                        !isConfirmPasswordVisible;
+                                  });
+                                },
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            obscureText: true,
+                            obscureText: !isConfirmPasswordVisible,
                             validator: (value) {
                               if (value != newPasswordController.text) {
                                 return 'Passwords do not match';
@@ -93,7 +120,6 @@ class ChangePasswordScreen extends StatelessWidget {
                             },
                           ),
                           const SizedBox(height: 16.0),
-
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.peach,
@@ -111,7 +137,7 @@ class ChangePasswordScreen extends StatelessWidget {
                                   print("new password : $newPassword");
                                   context.read<AuthBloc>().add(
                                         ChangePasswordRequested(
-                                            userId: userID!,
+                                            userId: widget.userID!,
                                             password: newPassword),
                                       );
                                   Navigator.pop(context);
@@ -132,8 +158,7 @@ class ChangePasswordScreen extends StatelessWidget {
                                     ),
                                   ),
                           ),
-                          const SizedBox(
-                              height: 100), // Extra spacing at the bottom
+                          const SizedBox(height: 100),
                         ],
                       ),
                     ],
