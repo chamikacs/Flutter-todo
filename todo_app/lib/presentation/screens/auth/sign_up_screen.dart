@@ -54,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: Center(
                         child: Image.asset(
-                          'lib/assets/union-sign.png',
+                          'assets/union-sign.png',
                           height: 180,
                           width: 180,
                           fit: BoxFit.contain,

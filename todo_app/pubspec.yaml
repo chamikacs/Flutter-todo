@@ -39,16 +39,29 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: BebasNeue
+      fonts:
+        - asset: assets/fonts/BebasNeue.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat.ttf
+    - family: Montserrat-Regular
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf    
+    - family: Montserrat-SemiBold
+      fonts:
+        - asset: assets/fonts/Montserrat-SemiBold.ttf    
   assets:
-        - lib/assets/plus-circle.png
-        - lib/assets/filter.png
-        - lib/assets/settings.png
-        - lib/assets/clock.png
-        - lib/assets/Union.png
-        - lib/assets/edit-2.png
-        - lib/assets/trash-2.png
-        - lib/assets/clock-d.png
-        - lib/assets/union-sign.png
-        - lib/assets/calendar.png
-        - lib/assets/pic.png
-        - lib/assets/rafiki.png
+        - assets/plus-circle.png
+        - assets/filter.png
+        - assets/settings.png
+        - assets/clock.png
+        - assets/Union.png
+        - assets/edit-2.png
+        - assets/trash-2.png
+        - assets/clock-d.png
+        - assets/union-sign.png
+        - assets/calendar.png
+        - assets/pic.png
+        - assets/rafiki.png

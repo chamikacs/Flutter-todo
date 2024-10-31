@@ -10,6 +10,7 @@ import 'package:todo_app/blocs/auth/auth_state.dart';
 import 'package:todo_app/blocs/todo/todo_bloc.dart';
 import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/blocs/todo/todo_state.dart';
+import 'package:todo_app/text_styles.dart';
 
 enum TodoFilter { all, time, deadline }
 
@@ -52,18 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           title: Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'TO DO LIST',
-              style: TextStyle(
-                color: AppColors.peach,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.headline2(AppColors.peach),
             ),
           ),
           actions: [
             IconButton(
-              icon: Image.asset('lib/assets/settings.png'),
+              icon: Image.asset('assets/settings.png'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -87,24 +84,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           Image.asset(
-                            'lib/assets/Union.png',
+                            'assets/Union.png',
                             height: 30,
                             width: 30,
                           ),
                           const SizedBox(width: 10),
-                          const Text(
+                          Text(
                             'LIST OF TODO',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: AppColors.coral,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppTextStyles.headline1,
                           ),
                         ],
                       ),
                       PopupMenuButton<TodoFilter>(
-                        icon:
-                            Image.asset('lib/assets/filter.png'), // Filter icon
+                        icon: Image.asset('assets/filter.png'), // Filter icon
                         onSelected: (TodoFilter filter) {
                           setState(() {
                             selectedFilter = filter;
@@ -237,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 92,
               width: 92,
               child: Image.asset(
-                'lib/assets/plus-circle.png',
+                'assets/plus-circle.png',
                 height: 92,
                 width: 92,
               ),

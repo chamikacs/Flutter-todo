@@ -4,6 +4,7 @@ import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/presentation/screens/todo/details_todo_screen.dart';
 import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/text_styles.dart';
 import 'package:todo_app/utils.dart';
 
 class TodoCard extends StatelessWidget {
@@ -53,16 +54,12 @@ class TodoCard extends StatelessWidget {
               children: [
                 Text(
                   todo.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.headline5,
                 ),
                 if (todo.deadline != null)
                   IconButton(
                     icon: Image.asset(
-                      'lib/assets/clock.png',
+                      'assets/clock.png',
                     ),
                     onPressed: () {},
                   ),
@@ -71,20 +68,14 @@ class TodoCard extends StatelessWidget {
             // const SizedBox(height: 8),
             Text(
               todo.description,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 14,
-              ),
+              style: AppTextStyles.body1(Colors.white),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 30),
             Text(
               'Created at ${Utils().formatDate(todo.createdAt)}',
-              style: TextStyle(
-                color: AppColors.white.withOpacity(0.8),
-                fontSize: 12,
-              ),
+              style: AppTextStyles.small,
             ),
           ],
         ),

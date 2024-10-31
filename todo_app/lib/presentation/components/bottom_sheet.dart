@@ -7,6 +7,7 @@ import 'package:todo_app/blocs/todo/todo_event.dart';
 import 'package:todo_app/models/todo.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
+import 'package:todo_app/text_styles.dart';
 
 class AddTodoBottomSheet extends StatefulWidget {
   final Todo? todo;
@@ -85,7 +86,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 controller: titleController,
                 decoration: InputDecoration(
                   hintText: 'Title',
-                  hintStyle: const TextStyle(color: Colors.white),
+                  hintStyle: AppTextStyles.body1(Colors.white),
                   filled: true,
                   fillColor: const Color(0xFFEAB6A2),
                   border: OutlineInputBorder(
@@ -106,7 +107,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 maxLines: 8,
                 decoration: InputDecoration(
                   hintText: 'Description',
-                  hintStyle: const TextStyle(color: Colors.white),
+                  hintStyle: AppTextStyles.body1(Colors.white),
                   filled: true,
                   fillColor: const Color(0xFFEAB6A2),
                   border: OutlineInputBorder(
@@ -130,7 +131,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                       labelText: selectedDate == null
                           ? 'Deadline (Optional)'
                           : 'Deadline: ${DateFormat("dd MMMM yyyy").format(selectedDate!)}',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: AppTextStyles.body1(Colors.white),
                       filled: true,
                       fillColor: const Color(0xFFEAB6A2),
                       border: OutlineInputBorder(
@@ -166,7 +167,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                                           _selectedImage == null
                                       ? 'Update Image' // Todo is not null
                                       : 'Image Updated', // Both are not null
-                          style: TextStyle(color: Colors.white),
+                          style: AppTextStyles.body1(Colors.white),
                         ),
                       ),
                     ],
@@ -203,7 +204,7 @@ class _AddTodoBottomSheetState extends State<AddTodoBottomSheet> {
                 },
                 child: Text(
                   widget.todo == null ? 'ADD TODO' : 'EDIT TODO',
-                  style: const TextStyle(color: AppColors.peach),
+                  style: AppTextStyles.button(AppColors.peach),
                 ),
               ),
               const SizedBox(

@@ -9,6 +9,7 @@ import 'package:todo_app/presentation/components/bottom_sheet.dart';
 import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/blocs/todo/todo_bloc.dart';
 import 'package:todo_app/blocs/todo/todo_state.dart';
+import 'package:todo_app/text_styles.dart';
 import 'package:todo_app/utils.dart';
 
 class DetailTodoScreen extends StatelessWidget {
@@ -69,18 +70,15 @@ class DetailTodoScreen extends StatelessWidget {
                               content: Text(
                                 Utils().formatDate(todo.deadline),
                                 softWrap: true,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                                style: AppTextStyles.headline6,
                               ),
                               child: Image.asset(
-                                'lib/assets/clock-d.png',
+                                'assets/clock-d.png',
                                 color: Colors.black,
                               ),
                             )
                           : Image.asset(
-                              'lib/assets/clock-d.png',
+                              'assets/clock-d.png',
                               color: Colors.grey,
                             ),
                     ),
@@ -89,7 +87,7 @@ class DetailTodoScreen extends StatelessWidget {
                     width: 11,
                   ),
                   IconButton(
-                    icon: Image.asset('lib/assets/edit-2.png'),
+                    icon: Image.asset('assets/edit-2.png'),
                     onPressed: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
@@ -99,7 +97,7 @@ class DetailTodoScreen extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: Image.asset('lib/assets/trash-2.png'),
+                    icon: Image.asset('assets/trash-2.png'),
                     onPressed: () => _showDeleteConfirmation(context, todo.id),
                   ),
                 ],
@@ -117,22 +115,14 @@ class DetailTodoScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 16),
                               Text(
                                 todo.title,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
+                                style: AppTextStyles.headline2(Colors.black),
                               ),
                               const SizedBox(height: 30),
                               Text(
                                 todo.description,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.black.withOpacity(0.7),
-                                ),
+                                style: AppTextStyles.body1(Colors.black),
                               ),
                               const SizedBox(height: 30),
                               if (todo.image != null && todo.image!.isNotEmpty)
@@ -150,10 +140,7 @@ class DetailTodoScreen extends StatelessWidget {
                               Center(
                                 child: Text(
                                   'Created at ${Utils().formatDate(todo.createdAt)}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: AppColors.black.withOpacity(0.6),
-                                  ),
+                                  style: AppTextStyles.body2,
                                 ),
                               ),
                               const SizedBox(height: 30),

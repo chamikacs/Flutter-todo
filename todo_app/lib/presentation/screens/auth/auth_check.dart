@@ -23,7 +23,7 @@ class AuthCheck extends StatelessWidget {
             context.read<TodoBloc>().add(LoadTodos());
             return const HomeScreen();
           } else {
-            return SignInScreen();
+            return const SignInScreen();
           }
         });
   }

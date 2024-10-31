@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/app_colors.dart';
-import 'package:todo_app/presentation/components/profile_info_row.dart';
 import 'package:todo_app/presentation/screens/auth/change_password.dart';
 import 'package:todo_app/presentation/screens/auth/sign_in_screen.dart';
 import 'package:todo_app/blocs/auth/auth_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:todo_app/blocs/auth/auth_event.dart';
 import 'package:todo_app/blocs/auth/auth_state.dart';
 import 'package:todo_app/blocs/todo/todo_bloc.dart';
 import 'package:todo_app/blocs/todo/todo_event.dart';
+import 'package:todo_app/text_styles.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
                         Expanded(
                           child: Center(
                             child: Image.asset(
-                              'lib/assets/rafiki.png',
+                              'assets/rafiki.png',
                               height: 250,
                               fit: BoxFit.contain,
                             ),
@@ -66,20 +66,40 @@ class ProfileScreen extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ProfileInfoRow(
-                                label: 'Full Name',
-                                value: profile['name'] ?? 'N/A'),
-                            const SizedBox(height: 16),
-                            ProfileInfoRow(
-                                label: 'Email',
-                                value: profile['email'] ?? 'N/A'),
+                            Row(
+                              children: [
+                                Text(
+                                  "Full Name",
+                                  style: AppTextStyles.body1(Colors.grey),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  profile['name'] ?? 'N/A',
+                                  style:
+                                      AppTextStyles.headline3(AppColors.peach),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
                             Row(
                               children: [
-                                const Text(
+                                Text(
+                                  "Full Name",
+                                  style: AppTextStyles.body1(Colors.grey),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  profile['email'] ?? 'N/A',
+                                  style: AppTextStyles.body1(AppColors.peach),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Text(
                                   'Password',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey),
+                                  style: AppTextStyles.body1(AppColors.peach),
                                 ),
                                 const Spacer(),
                                 TextButton(
@@ -94,12 +114,9 @@ class ProfileScreen extends StatelessWidget {
                                               )),
                                     );
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     'Change Password',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.deepOrangeAccent,
-                                    ),
+                                    style: AppTextStyles.body1(AppColors.coral),
                                   ),
                                 ),
                               ],
@@ -117,13 +134,9 @@ class ProfileScreen extends StatelessWidget {
                                 context.read<AuthBloc>().add(LogoutRequested());
                                 context.read<TodoBloc>().add(ClearTodosEvent());
                               },
-                              child: const Text(
+                              child: Text(
                                 'Log Out',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: AppTextStyles.button(Colors.white),
                               ),
                             ),
                           ],

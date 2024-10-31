@@ -4,11 +4,12 @@ import 'package:todo_app/app_colors.dart';
 import 'package:todo_app/blocs/auth/auth_bloc.dart';
 import 'package:todo_app/blocs/auth/auth_event.dart';
 import 'package:todo_app/blocs/auth/auth_state.dart';
+import 'package:todo_app/text_styles.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String? userID;
 
-  ChangePasswordScreen({super.key, required this.userID});
+  const ChangePasswordScreen({super.key, required this.userID});
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
@@ -53,7 +54,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       Expanded(
                         child: Center(
                           child: Image.asset(
-                            'lib/assets/union-sign.png',
+                            'assets/union-sign.png',
                             height: 180,
                             width: 180,
                             fit: BoxFit.contain,
@@ -149,13 +150,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white),
                                   )
-                                : const Text(
+                                : Text(
                                     'CHANGE PASSWORD',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: AppTextStyles.button(Colors.white),
                                   ),
                           ),
                           const SizedBox(height: 100),
